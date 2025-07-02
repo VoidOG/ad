@@ -1,16 +1,14 @@
-SESSION_STRING = "your_pyrogram_string_here"
+SESSION_STRING = "BQGz0ToAuN4b64CXcaxw2Z9NXSrv4NlOlKHCoUZaFsC5oLcCARqEisXl8acO4mcve-xIm92XwSZts6Jhzwi-65hfU1RZCU9NKTLL5ILsMUrNSwqBCFVbKET6ObyuZ2j2MRWWXlMyPR8h9JPyGVGDQbuKuzL9Dz4Cgip00kdAYDaM96DleIqVj2GegNmn6TYjEH9nfVrcfOrIGDukEYKekcBVFvn8NlnY0r_lunpP7O0CvrPN4hpOptGUFW2gzeOPfjS_L-2JnKUFluHSMqCvR3WeE5KnFptbN2n3qeN_z8I5ypcQ26phHKkdpx4tPcF96q2Xjvd9OrRxGRRLJqjRKLM6LEh7NQAAAAHPmT5cAA"
 
-SOURCE_CHANNEL_ID = -1001234567890  # Source channel
-MESSAGE_ID = 42  # Message to forward
+SOURCE_CHANNEL_ID = -1002532430942  # Source channel
+MESSAGE_ID = 2 # Message to forward
 
 FORUM_TARGETS = [
-    {"chat_id": -1001122334455, "topic_id": 1234},
-    {"chat_id": -1006677889900, "topic_id": 5678},
+    {"chat_id": -1002063425506, "topic_id": 823},
 ]
 
 NORMAL_GROUPS = [
-    -1009988776655,
-    -1002233445566,
+    -1002529323673,
 ]
 
-DELAY_SECONDS = 3600  # 1 hour
+DELAY_SECONDS = 600 # in seconds
