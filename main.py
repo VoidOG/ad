@@ -2,7 +2,7 @@ import asyncio
 from pyrogram import Client, errors
 from config import *
 
-app = Client(session_name=SESSION_STRING, api_id=API_ID, api_hash=API_HASH)
+app = Client(name="anon", api_id=API_ID, api_hash=API_HASH, session_string=SESSION_STRING)
 
 async def extract_message_info(link):
     parts = link.replace("https://t.me/", "").split("/")
