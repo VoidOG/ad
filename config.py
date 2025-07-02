@@ -12,6 +12,6 @@ NORMAL_GROUPS = [
     -1002529323673,
 ]
 
-DELAY_SECONDS = 600  # seconds
+DELAY_SECONDS = 30  # seconds
 
 LOG_GROUP_ID = -1002854086015  # log group/channel
