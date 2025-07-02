@@ -1,48 +1,93 @@
 import asyncio
-from pyrogram import Client, errors
-from config import *
+import random
+from pyrogram import Client, filters
+from pyrogram.types import Message
 
-app = Client(name="anon", api_id=API_ID, api_hash=API_HASH, session_string=SESSION_STRING)
+from config import (
+    API_ID,
+    API_HASH,
+    SESSION_STRING,
+    LOG_GROUP_ID,
+    MESSAGE_LINKS,
+    NORMAL_GROUPS,
+    FORUM_TARGETS,
+)
 
-async def extract_message_info(link):
-    parts = link.replace("https://t.me/", "").split("/")
-    channel_username = parts[0]
-    message_id = int(parts[1])
-    return channel_username, message_id
+app = Client(
+    "adbot",
+    api_id=API_ID,
+    api_hash=API_HASH,
+    session_string=SESSION_STRING
+)
 
-async def forward_to_forums(channel_username, message_id):
+# Utility to parse t.me message link
+def parse_link(link):
+    parts = link.split("/")
+    chat_username = parts[-2]
+    msg_id = int(parts[-1])
+    return chat_username, msg_id
+
+# Forward message to forum threads
+async def forward_to_forums():
+    link = random.choice(MESSAGE_LINKS)
+    username, msg_id = parse_link(link)
+
     for target in FORUM_TARGETS:
         try:
             await app.forward_messages(
                 chat_id=target["chat_id"],
-                from_chat_id=channel_username,
-                message_ids=message_id,
+                from_chat_id=username,
+                message_ids=msg_id,
                 message_thread_id=target["topic_id"]
             )
-            await app.send_message(LOG_GROUP_ID, f"✅ Forwarded to forum {target['chat_id']}:{target['topic_id']}")
+            await app.send_message(
+                LOG_GROUP_ID,
+                f"✅ Forwarded to forum {target['chat_id']}:{target['topic_id']}"
+            )
         except Exception as e:
-            await app.send_message(LOG_GROUP_ID, f"❌ Forum {target['chat_id']} failed: {e}")
+            await app.send_message(
+                LOG_GROUP_ID,
+                f"❌ Failed forum {target['chat_id']}:{target['topic_id']} — {e}"
+            )
+        await asyncio.sleep(target.get("delay", 600))  # Custom delay per forum
 
-async def forward_to_groups(channel_username, message_id):
-    for group_id in NORMAL_GROUPS:
+# Forward message to normal groups
+async def forward_to_groups():
+    link = random.choice(MESSAGE_LINKS)
+    username, msg_id = parse_link(link)
+
+    for group in NORMAL_GROUPS:
         try:
             await app.forward_messages(
-                chat_id=group_id,
-                from_chat_id=channel_username,
-                message_ids=message_id
+                chat_id=group["chat_id"],
+                from_chat_id=username,
+                message_ids=msg_id
             )
-            await app.send_message(LOG_GROUP_ID, f"✅ Forwarded to group {group_id}")
+            await app.send_message(
+                LOG_GROUP_ID,
+                f"✅ Forwarded to group {group['chat_id']}"
+            )
         except Exception as e:
-            await app.send_message(LOG_GROUP_ID, f"❌ Group {group_id} failed: {e}")
+            await app.send_message(
+                LOG_GROUP_ID,
+                f"❌ Failed group {group['chat_id']} — {e}"
+            )
+        await asyncio.sleep(group.get("delay", 600))  # Custom delay per group
 
+# Auto-reply in DMs
+@app.on_message(filters.private & ~filters.me)
+async def auto_reply_dm(client: Client, message: Message):
+    await message.reply_text(
+        "I am an automated AdBot powered by @adversio.\n"
+        "Kindly contact the person in my bio for any queries."
+    )
+
+# Main loop
 async def main():
     async with app:
-        channel_username, message_id = await extract_message_info(SOURCE_CHANNEL_LINK)
         while True:
-            await forward_to_forums(channel_username, message_id)
-            await forward_to_groups(channel_username, message_id)
-            await app.send_message(LOG_GROUP_ID, f"⏱️ Waiting {DELAY_SECONDS} seconds before next cycle")
-            await asyncio.sleep(DELAY_SECONDS)
+            await forward_to_forums()
+            await forward_to_groups()
 
 if __name__ == "__main__":
     asyncio.run(main())
