@@ -5,8 +5,8 @@ SESSION_STRING = "BQGz0ToAuN4b64CXcaxw2Z9NXSrv4NlOlKHCoUZaFsC5oLcCARqEisXl8acO4m
 LOG_GROUP_ID = -1002854086015
 
 MESSAGE_LINKS = [
-    "https://t.me/channelusername/123",
-    "https://t.me/channelusername/456"
+    "https://t.me/incoTemplates/3",
+    "https://t.me/incoTemplates/4"
 ]
 
 FORUM_TARGETS = [
